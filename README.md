@@ -12,19 +12,11 @@ Mi enfoque principal está en **backend con Spring Boot**, aunque también tengo
 
 
 ### Backend (principal):  
-- Java & Spring Boot (REST, inyección de dependencias, factorías)  
 - Microservicios, arquitectura modular y arquitectura Hexagonal  
-- Bases de datos: MySQL, PostgreSQL  
 - Testing y buenas prácticas de desarrollo  
 
 ### Frontend (secundario):  
-- Angular, HTML5, CSS3, Bootstrap, ng-bootstrap  
 - Diseño responsive y experiencia de usuario  
-
-### Otras herramientas:  
-- Git, GitFlow, Docker  
-- Stripe (pagos), integración de APIs  
-
 
 **Idiomas:**  
 - Español (nativo)  
