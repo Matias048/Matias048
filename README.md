@@ -1,5 +1,3 @@
-## Hi there 👋
-
 # 👋 Hola, soy Matias Perez
 
 Soy **desarrollador web recién graduado en Desarrollo de Aplicaciones Web (DAW)** en Valencia, actualmente en **búsqueda de mi primer empleo**.  
