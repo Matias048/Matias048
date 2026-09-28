@@ -1,210 +1,172 @@
-<h1 align="center">Matías Pérez</h1>
+# Matías Pérez
 
-<p align="center">
-  <b>Full-Stack Developer · Java 21 · Spring Boot · Angular</b><br/>
-  Construyo aplicaciones completas y mantenibles: backend con arquitectura hexagonal, CQRS y DDD, y frontend Angular reactivo con Signals.
-</p>
+**Full-Stack Developer — Java, Spring Boot y Angular**<br/>
+Valencia, España
 
-<p align="center">
-  📍 Valencia, España &nbsp;·&nbsp; 🟢 Abierto a oportunidades como Full-Stack o Backend Developer
-</p>
+Desarrollador full-stack especializado en backend con Java 21 y Spring Boot, y en frontend con Angular. Me interesa sobre todo el diseño de software que aguanta el paso del tiempo: dominios bien modelados, módulos con límites claros y tests que dan confianza para cambiar el código.
 
 ---
 
-## Sobre mí
+## Perfil
 
-Titulado en **Desarrollo de Aplicaciones Web (DAW)**. Llevo más de un año construyendo un **producto interno de gestión de restaurantes** que empezó como mi TFG y he rehecho desde cero con criterios de producción: límites entre módulos que se comprueban en el build, decisiones de arquitectura documentadas y CI que bloquea lo que no pasa.
+Titulado en Desarrollo de Aplicaciones Web (DAW), con un año de experiencia en producción en Inycom, donde trabajo en una aplicación del sector sanitario. Allí he pasado de corregir errores a refactorizar módulos completos, resolver incidencias críticas y participar en el análisis técnico y funcional.
 
-Trabajo en las **dos capas**. En backend modelo el dominio, fijo dónde acaba cada módulo y me aseguro de que lo crítico (pagos, emails, eventos) no se pierda cuando algo falla. En frontend construyo con Angular moderno: Signals, OnPush, interceptors, tiempo real por SSE y un DOM que no se re-renderiza de más. Y siempre con cero lógica de negocio en el cliente.
+En paralelo he desarrollado un sistema de gestión de restaurantes. Empezó como mi Trabajo de Fin de Grado y lo rehíce desde cero con criterios de producción: arquitectura documentada, límites entre módulos verificados en el build e integración continua en cada cambio.
 
-Programo con **Claude Code** como herramienta del día a día, con *skills* y guías de repositorio propias que fijan las reglas de arquitectura del proyecto.
+En backend trabajo con arquitectura hexagonal, monolito modular, CQRS y DDD. Pongo especial cuidado en la consistencia de los datos y en la gestión de fallos con servicios externos. En frontend desarrollo con Angular moderno (Signals, OnPush, componentes standalone), con una capa HTTP bien estructurada y sin lógica de negocio en el cliente.
 
 ---
 
-## Proyecto destacado: gestión de restaurantes 🍽️
+## Experiencia profesional
 
-> Sistema completo para un restaurante: los clientes **piden y pagan desde la mesa escaneando un QR**, el camarero atiende en paralelo el servicio tradicional y cocina recibe los tickets en tiempo real.
->
-> *Producto interno con código privado. Si te interesa, te hago una demo en directo y te enseño el código.*
+**Desarrollador Full-Stack · Inycom** — Valencia · Octubre 2025 – actualidad<br/>
+Consultora de desarrollo de software a medida. Trabajo sobre una aplicación del sector sanitario en producción con Angular, Spring Boot y SQL Server.
 
-**Qué resuelve**
+**Logros**
+- **Refactorización completa de uno de los cinco módulos de la aplicación, en backend y frontend, sin regresiones en producción.** Rediseñé el módulo con responsabilidades separadas, la lógica de negocio fuera de controladores y componentes, y límites claros con el resto del sistema. Consiguió **tiempos de respuesta un 60 % más rápidos** y una base preparada para escalar y mantenerse a largo plazo.
+- **Código más fácil de mantener para todo el equipo.** Otros desarrolladores han destacado que corregir errores y aplicar cambios de requisito en las partes refactorizadas es ahora mucho más sencillo.
+- **Desarrollo de módulos completos de extremo a extremo**, desde el análisis funcional hasta producción.
+- **Resolución de incidencias críticas en producción.**
+- **Referente del equipo en el dominio de negocio.** Participo en el análisis técnico y funcional, reviso requisitos con negocio y promuevo un lenguaje común entre desarrollo y cliente.
+
+---
+
+## Proyecto principal: sistema de gestión de restaurantes
+
+Aplicación completa para la operativa de un restaurante. Los clientes piden y pagan desde la mesa escaneando un código QR. El personal de sala atiende en paralelo el servicio tradicional y cocina recibe las comandas en tiempo real.
+
+Es un producto interno con código privado. Puedo enseñar el código y hacer una demostración en una entrevista.
+
+**Funcionalidades**
 - Pedidos por QR con sesión de mesa, carrito compartido entre comensales y rondas
-- Pago con **Stripe**, incluido el cobro por comensal (cada uno paga lo suyo)
-- Tablero de cocina y mapa de mesas del camarero **en tiempo real por SSE**
-- Panel de administración: carta, planos de sala con zonas, personal, caja y arqueo
-- **Importación de la carta desde PDF con LLM** (Spring AI, Groq/Ollama detrás de un único puerto)
-- Tickets y documentos fiscales (JasperReports, PDFBox), emails transaccionales y programa de puntos
+- Pagos con Stripe, incluido el pago separado por comensal
+- Pantalla de cocina y mapa de sala del camarero actualizados en tiempo real (SSE)
+- Panel de administración: carta, planos de sala, personal, caja y arqueo
+- Importación de la carta desde PDF mediante un modelo de lenguaje (Spring AI)
+- Tickets y documentos fiscales, emails transaccionales y programa de fidelización
 
-**Lo más destacado**
-- 🧱 **Monolito modular hexagonal con CQRS.** Los límites entre módulos los comprueba **ArchUnit** en CI: si alguien los cruza, el build falla.
-- 🛡️ **Nada crítico se pierde.** Pagos, emails y llamadas externas pasan por un **Transactional Outbox** con reintentos y circuit breaker.
-- ⚡ **Tiempo real de punta a punta.** El backend emite eventos por SSE y el frontend los convierte en Signals, con `OnPush` en todos los componentes.
-- 🧪 **~290 clases de test en backend** con Testcontainers contra un PostgreSQL real, más ~80 specs en frontend.
-- 📚 **20 ADRs.** Cada decisión importante tiene escrito el porqué.
-
-**Arquitectura**
-
-```mermaid
-flowchart LR
-    subgraph Cliente["Angular 17 · Signals"]
-        QR["Cliente en mesa (QR)"]
-        STAFF["Camarero · Cocina · Admin"]
-    end
-
-    NGINX["Nginx<br/>mismo origen"]
-
-    subgraph API["Spring Boot 3 · Java 21 · monolito modular"]
-        direction TB
-        MOD["orders · dining · payments · menu<br/>cash · user · customer · ..."]
-        BUS["Command / Query bus<br/>+ eventos de dominio"]
-        OUT["Transactional Outbox"]
-        MOD --> BUS --> OUT
-    end
-
-    PG[("PostgreSQL<br/>esquema por módulo")]
-    REDIS[("Redis<br/>caché L2")]
-    EXT["Stripe · SMTP · LLM<br/>Cloudinary"]
-
-    QR & STAFF -->|"REST + JWT"| NGINX --> API
-    API -.->|"SSE en tiempo real"| NGINX
-    API --> PG
-    API --> REDIS
-    OUT -->|"reintentos + circuit breaker"| EXT
-```
+**Aspectos técnicos**
+- Monolito modular con arquitectura hexagonal y CQRS. Los límites entre módulos se comprueban con ArchUnit en la integración continua.
+- Patrón Transactional Outbox para las operaciones críticas (pagos, emails, servicios externos), con reintentos y circuit breaker mediante Resilience4j.
+- Unas 290 clases de test en backend, con Testcontainers sobre PostgreSQL real, y unas 80 especificaciones en frontend.
+- 20 registros de decisiones de arquitectura (ADR) y documentación por módulo.
 
 <details>
-<summary><b>Backend en detalle</b></summary>
+<summary><b>Detalle del backend</b></summary>
 
 <br/>
 
-| | |
+| Área | Implementación |
 |---|---|
-| **Arquitectura** | Monolito modular (17+ módulos) · hexagonal · CQRS con command/query bus · eventos de dominio |
-| **Fiabilidad** | Patrón **Transactional Outbox** (`FOR UPDATE SKIP LOCKED` + reintentos con backoff) · Resilience4j (circuit breaker, retry, bulkhead) · `@Version` en agregados |
-| **Límites verificados** | **ArchUnit** en CI: el dominio no importa Spring, los módulos solo se comunican por su `api/` o por eventos |
-| **Datos** | PostgreSQL con esquema por módulo · 75 migraciones **Flyway** · IDs duales (`Long` interno + `UUID` público) |
-| **Seguridad** | Spring Security + OAuth2 + JWT · endpoints separados por rol (admin, staff, camarero, cocina, público) |
-| **Rendimiento** | Caché en dos niveles (Caffeine + Redis) |
-| **Observabilidad** | Actuator + Micrometer → Prometheus + Grafana |
-| **Tests** | ~290 clases de test (JUnit 5, **Testcontainers** con PostgreSQL real, ArchUnit) |
+| Arquitectura | Monolito modular con más de 17 módulos, arquitectura hexagonal, CQRS con command/query bus y eventos de dominio |
+| Consistencia | Transactional Outbox (`FOR UPDATE SKIP LOCKED` y reintentos con backoff), Resilience4j (circuit breaker, retry, bulkhead), bloqueo optimista con `@Version` |
+| Límites entre módulos | Tests de ArchUnit: el dominio no depende de Spring y los módulos solo se comunican a través de su API pública o de eventos |
+| Persistencia | PostgreSQL con un esquema por módulo, 75 migraciones con Flyway, identificadores internos y públicos separados (`Long` / `UUID`) |
+| Seguridad | Spring Security, OAuth2 y JWT, con endpoints separados por rol (administración, personal, camarero, cocina y público) |
+| Rendimiento | Caché en dos niveles con Caffeine y Redis |
+| Observabilidad | Actuator y Micrometer, con métricas en Prometheus y Grafana |
+| Testing | JUnit 5, Testcontainers y ArchUnit |
 
 </details>
 
 <details>
-<summary><b>Frontend en detalle</b></summary>
+<summary><b>Detalle del frontend</b></summary>
 
 <br/>
 
-| | |
+| Área | Implementación |
 |---|---|
-| **Base** | Angular 17 standalone · rutas con *lazy loading* por área (admin, personal, cliente) · guards funcionales |
-| **Estado y reactividad** | **Signals** y `computed` como modelo por defecto · RxJS solo para flujos reales (HTTP, SSE) · `toSignal` como puente entre los dos · `OnPush` en todos los componentes |
-| **Capa HTTP** | **7 interceptors** en cadena: autenticación con refresco de token, errores globales, idioma, indicador de carga y la sesión de mesa con reintentos |
-| **Tiempo real** | Servicios SSE sobre `EventSource` con reconexión, que alimentan signals |
-| **DOM y rendimiento** | `Renderer2` y `ElementRef` en lugar de tocar el DOM a pelo · `IntersectionObserver` · `@for` con `track` · sin llamadas a funciones en el template |
-| **Memoria** | Todas las suscripciones cerradas con `takeUntilDestroyed(DestroyRef)` |
-| **Seguridad** | Access token solo en memoria, refresh token en cookie HttpOnly · mismo origen detrás de Nginx, sin CORS en producción · cabeceras de seguridad en Nginx |
-| **UI** | PrimeNG · SCSS con tokens de diseño y sin `px` (`rem`, `clamp()`) · animaciones con **GSAP** · gráficas con Chart.js · i18n con ngx-translate · Stripe.js |
-| **Tipado y calidad** | TypeScript estricto y **cero `any`** · ESLint, Prettier y Stylelint · ~80 specs |
-| **Regla de oro** | Cero lógica de negocio en el cliente: importes, repartos y arqueos los calcula el backend |
+| Base | Angular 17 standalone, carga diferida de rutas por área (administración, personal, cliente) y guards funcionales |
+| Estado | Signals y `computed` como modelo principal; RxJS reservado para HTTP y SSE, con `toSignal` como puente; `OnPush` en todos los componentes |
+| Capa HTTP | Siete interceptors: autenticación con renovación de token, gestión global de errores, idioma, indicador de carga y sesión de mesa con reintentos |
+| Tiempo real | Servicios SSE sobre `EventSource` con reconexión automática |
+| DOM y rendimiento | Acceso al DOM mediante `Renderer2` y `ElementRef`, `IntersectionObserver`, `@for` con `track` y sin llamadas a funciones desde las plantillas |
+| Gestión de memoria | Suscripciones cerradas con `takeUntilDestroyed` |
+| Seguridad | Access token en memoria y refresh token en cookie HttpOnly; frontend y API bajo el mismo origen detrás de Nginx, con cabeceras de seguridad |
+| Interfaz | PrimeNG, SCSS con tokens de diseño y unidades relativas, animaciones con GSAP, gráficas con Chart.js e internacionalización con ngx-translate |
+| Calidad | TypeScript estricto sin `any`, ESLint, Prettier y Stylelint |
 
 </details>
 
 <details>
-<summary><b>Calidad, CI y despliegue</b></summary>
+<summary><b>Calidad, integración continua y despliegue</b></summary>
 
 <br/>
 
-| | |
+| Área | Implementación |
 |---|---|
-| **Entorno local** | `proxy.conf.json` de Angular hacia el backend por HTTPS · Docker Compose con app, PostgreSQL, Redis, monitorización y Sonar |
-| **Calidad y CI** | GitHub Actions separado para backend y frontend · Checkstyle · SpotBugs · SonarQube · JaCoCo · hook `pre-push` que bloquea |
-| **Documentación** | **20 ADRs**, un documento por módulo y máquinas de estado canónicas |
-| **Despliegue** | Una instalación por restaurante · réplicas sin estado · migraciones en un paso `release` aparte |
+| Entorno local | Proxy de desarrollo de Angular hacia el backend por HTTPS y Docker Compose con PostgreSQL, Redis, monitorización y SonarQube |
+| Integración continua | Pipelines de GitHub Actions independientes para backend y frontend, con Checkstyle, SpotBugs, SonarQube y JaCoCo, y hook de `pre-push` |
+| Documentación | ADRs, documentación por módulo y máquinas de estado de referencia |
+| Despliegue | Una instalación por restaurante, réplicas sin estado y migraciones en una fase de release independiente |
 
 </details>
 
-La primera versión, la del TFG, sigue siendo pública: **[TFG](https://github.com/Matias048/TFG)**. Comparar ese repositorio con la versión actual es la mejor forma de ver cuánto he avanzado.
+La primera versión del proyecto, la del Trabajo de Fin de Grado, sigue publicada en [TFG](https://github.com/Matias048/TFG).
 
 ---
 
-## Stack
+## Tecnologías
 
-**Backend**
-<p>
-  <img src="https://img.shields.io/badge/Java_21-ED8B00?style=flat-square&logo=openjdk&logoColor=white" alt="Java 21"/>
-  <img src="https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=flat-square&logo=springboot&logoColor=white" alt="Spring Boot 3"/>
-  <img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white" alt="Spring Security"/>
-  <img src="https://img.shields.io/badge/Spring_AI-6DB33F?style=flat-square&logo=spring&logoColor=white" alt="Spring AI"/>
-  <img src="https://img.shields.io/badge/Hibernate_/_JPA-59666C?style=flat-square&logo=hibernate&logoColor=white" alt="Hibernate / JPA"/>
-  <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white" alt="Gradle"/>
-  <img src="https://img.shields.io/badge/Stripe-635BFF?style=flat-square&logo=stripe&logoColor=white" alt="Stripe"/>
-</p>
-
-**Datos**
-<p>
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
-  <img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis"/>
-  <img src="https://img.shields.io/badge/Flyway-CC0200?style=flat-square&logo=flyway&logoColor=white" alt="Flyway"/>
-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" alt="MySQL"/>
-</p>
-
-**Frontend**
-<p>
-  <img src="https://img.shields.io/badge/Angular-DD0031?style=flat-square&logo=angular&logoColor=white" alt="Angular"/>
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"/>
-  <img src="https://img.shields.io/badge/RxJS-B7178C?style=flat-square&logo=reactivex&logoColor=white" alt="RxJS"/>
-  <img src="https://img.shields.io/badge/PrimeNG-DD0031?style=flat-square&logo=primeng&logoColor=white" alt="PrimeNG"/>
-  <img src="https://img.shields.io/badge/SCSS-CC6699?style=flat-square&logo=sass&logoColor=white" alt="SCSS"/>
-  <img src="https://img.shields.io/badge/GSAP-88CE02?style=flat-square&logo=greensock&logoColor=black" alt="GSAP"/>
-  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=flat-square&logo=chartdotjs&logoColor=white" alt="Chart.js"/>
-</p>
-
-**Testing y calidad**
-<p>
-  <img src="https://img.shields.io/badge/JUnit_5-25A162?style=flat-square&logo=junit5&logoColor=white" alt="JUnit 5"/>
-  <img src="https://img.shields.io/badge/Testcontainers-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Testcontainers"/>
-  <img src="https://img.shields.io/badge/ArchUnit-555555?style=flat-square" alt="ArchUnit"/>
-  <img src="https://img.shields.io/badge/SonarQube-4E9BCD?style=flat-square&logo=sonarqube&logoColor=white" alt="SonarQube"/>
-</p>
-
-**DevOps y herramientas**
-<p>
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"/>
-  <img src="https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white" alt="Nginx"/>
-  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions"/>
-  <img src="https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white" alt="Prometheus"/>
-  <img src="https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white" alt="Grafana"/>
-  <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white" alt="Git"/>
-  <img src="https://img.shields.io/badge/Claude_Code-D97757?style=flat-square&logo=claude&logoColor=white" alt="Claude Code"/>
-</p>
+<table>
+  <tr>
+    <td><b>Backend</b></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" width="36" height="36" alt="Java 21"/><br/><sub>Java 21</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" width="36" height="36" alt="Spring Boot 3"/><br/><sub>Spring Boot 3</sub></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/springsecurity/6DB33F" width="36" height="36" alt="Spring Security"/><br/><sub>Spring Security</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" width="36" height="36" alt="Spring AI"/><br/><sub>Spring AI</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/hibernate/hibernate-original.svg" width="36" height="36" alt="JPA / Hibernate"/><br/><sub>JPA / Hibernate</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gradle/gradle-original.svg" width="36" height="36" alt="Gradle"/><br/><sub>Gradle</sub></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/stripe/635BFF" width="36" height="36" alt="Stripe"/><br/><sub>Stripe</sub></td>
+  </tr>
+  <tr>
+    <td><b>Frontend</b></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" width="36" height="36" alt="Angular"/><br/><sub>Angular</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" width="36" height="36" alt="TypeScript"/><br/><sub>TypeScript</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rxjs/rxjs-original.svg" width="36" height="36" alt="RxJS"/><br/><sub>RxJS</sub></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/primeng/DD0031" width="36" height="36" alt="PrimeNG"/><br/><sub>PrimeNG</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg" width="36" height="36" alt="SCSS"/><br/><sub>SCSS</sub></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/greensock/88CE02" width="36" height="36" alt="GSAP"/><br/><sub>GSAP</sub></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/chartdotjs/FF6384" width="36" height="36" alt="Chart.js"/><br/><sub>Chart.js</sub></td>
+  </tr>
+  <tr>
+    <td><b>Bases de datos</b></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="36" height="36" alt="PostgreSQL"/><br/><sub>PostgreSQL</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg" width="36" height="36" alt="Redis"/><br/><sub>Redis</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/microsoftsqlserver/microsoftsqlserver-original.svg" width="36" height="36" alt="SQL Server"/><br/><sub>SQL Server</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" width="36" height="36" alt="MySQL"/><br/><sub>MySQL</sub></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/flyway/CC0200" width="36" height="36" alt="Flyway"/><br/><sub>Flyway</sub></td>
+  </tr>
+  <tr>
+    <td><b>Testing y calidad</b></td>
+    <td align="center" width="96"><img src="https://cdn.simpleicons.org/junit5/25A162" width="36" height="36" alt="JUnit 5"/><br/><sub>JUnit 5</sub></td>
+    <td align="center" width="96"><img src="https://avatars.githubusercontent.com/u/13393021" width="36" height="36" alt="Testcontainers"/><br/><sub>Testcontainers</sub></td>
+    <td align="center" width="96"><img src="https://raw.githubusercontent.com/TNG/ArchUnit/main/docs/assets/ArchUnit-Logo.png" width="36" height="36" alt="ArchUnit"/><br/><sub>ArchUnit</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sonarqube/sonarqube-original.svg" width="36" height="36" alt="SonarQube"/><br/><sub>SonarQube</sub></td>
+  </tr>
+  <tr>
+    <td><b>DevOps</b></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" width="36" height="36" alt="Docker"/><br/><sub>Docker</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nginx/nginx-original.svg" width="36" height="36" alt="Nginx"/><br/><sub>Nginx</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/githubactions/githubactions-original.svg" width="36" height="36" alt="GitHub Actions"/><br/><sub>GitHub Actions</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prometheus/prometheus-original.svg" width="36" height="36" alt="Prometheus"/><br/><sub>Prometheus</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/grafana/grafana-original.svg" width="36" height="36" alt="Grafana"/><br/><sub>Grafana</sub></td>
+    <td align="center" width="96"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" width="36" height="36" alt="Git"/><br/><sub>Git</sub></td>
+  </tr>
+</table>
 
 ---
 
 ## Otros repositorios
 
-| Repositorio | Qué es |
+| Repositorio | Descripción |
 |---|---|
-| [TFG](https://github.com/Matias048/TFG) | Primera versión del sistema de gestión de restaurantes, mi Trabajo de Fin de Grado: Spring Boot + Angular + MySQL + Stripe |
+| [TFG](https://github.com/Matias048/TFG) | Primera versión del sistema de gestión de restaurantes: Spring Boot, Angular, MySQL y Stripe |
 | [patient-managment-app](https://github.com/Matias048/patient-managment-app) | Práctica de microservicios con Spring Boot |
 | [Gestion-Usuarios](https://github.com/Matias048/Gestion-Usuarios) | Gestión de usuarios con API y backoffice |
 
 ---
 
-## Qué estoy trabajando ahora
-
-- Llevar el sistema de gestión de restaurantes a producción: una instalación por restaurante, réplicas sin estado y migraciones en un paso `release` separado
-- Profundizar en sistemas distribuidos y mensajería: el siguiente paso natural después del outbox
-- Mejorar mi inglés (B2 → C1)
-
----
-
 ## Idiomas
 
-🇪🇸 Español, nativo &nbsp;·&nbsp; 🇬🇧 Inglés, B2
-
----
-
-<p align="center">
-  ¿Hablamos? Escríbeme o conéctate conmigo, y te enseño el sistema funcionando.
-</p>
+Español (nativo) · Inglés (B2)
