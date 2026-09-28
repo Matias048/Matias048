@@ -35,7 +35,47 @@ Programo con **Claude Code** como herramienta del día a día, con *skills* y gu
 - **Importación de la carta desde PDF con LLM** (Spring AI, Groq/Ollama detrás de un único puerto)
 - Tickets y documentos fiscales (JasperReports, PDFBox), emails transaccionales y programa de puntos
 
-**Cómo está construido: backend**
+**Lo más destacado**
+- 🧱 **Monolito modular hexagonal con CQRS.** Los límites entre módulos los comprueba **ArchUnit** en CI: si alguien los cruza, el build falla.
+- 🛡️ **Nada crítico se pierde.** Pagos, emails y llamadas externas pasan por un **Transactional Outbox** con reintentos y circuit breaker.
+- ⚡ **Tiempo real de punta a punta.** El backend emite eventos por SSE y el frontend los convierte en Signals, con `OnPush` en todos los componentes.
+- 🧪 **~290 clases de test en backend** con Testcontainers contra un PostgreSQL real, más ~80 specs en frontend.
+- 📚 **20 ADRs.** Cada decisión importante tiene escrito el porqué.
+
+**Arquitectura**
+
+```mermaid
+flowchart LR
+    subgraph Cliente["Angular 17 · Signals"]
+        QR["Cliente en mesa (QR)"]
+        STAFF["Camarero · Cocina · Admin"]
+    end
+
+    NGINX["Nginx<br/>mismo origen"]
+
+    subgraph API["Spring Boot 3 · Java 21 · monolito modular"]
+        direction TB
+        MOD["orders · dining · payments · menu<br/>cash · user · customer · ..."]
+        BUS["Command / Query bus<br/>+ eventos de dominio"]
+        OUT["Transactional Outbox"]
+        MOD --> BUS --> OUT
+    end
+
+    PG[("PostgreSQL<br/>esquema por módulo")]
+    REDIS[("Redis<br/>caché L2")]
+    EXT["Stripe · SMTP · LLM<br/>Cloudinary"]
+
+    QR & STAFF -->|"REST + JWT"| NGINX --> API
+    API -.->|"SSE en tiempo real"| NGINX
+    API --> PG
+    API --> REDIS
+    OUT -->|"reintentos + circuit breaker"| EXT
+```
+
+<details>
+<summary><b>Backend en detalle</b></summary>
+
+<br/>
 
 | | |
 |---|---|
@@ -48,7 +88,12 @@ Programo con **Claude Code** como herramienta del día a día, con *skills* y gu
 | **Observabilidad** | Actuator + Micrometer → Prometheus + Grafana |
 | **Tests** | ~290 clases de test (JUnit 5, **Testcontainers** con PostgreSQL real, ArchUnit) |
 
-**Cómo está construido: frontend**
+</details>
+
+<details>
+<summary><b>Frontend en detalle</b></summary>
+
+<br/>
 
 | | |
 |---|---|
@@ -63,7 +108,12 @@ Programo con **Claude Code** como herramienta del día a día, con *skills* y gu
 | **Tipado y calidad** | TypeScript estricto y **cero `any`** · ESLint, Prettier y Stylelint · ~80 specs |
 | **Regla de oro** | Cero lógica de negocio en el cliente: importes, repartos y arqueos los calcula el backend |
 
-**Transversal**
+</details>
+
+<details>
+<summary><b>Calidad, CI y despliegue</b></summary>
+
+<br/>
 
 | | |
 |---|---|
@@ -71,6 +121,8 @@ Programo con **Claude Code** como herramienta del día a día, con *skills* y gu
 | **Calidad y CI** | GitHub Actions separado para backend y frontend · Checkstyle · SpotBugs · SonarQube · JaCoCo · hook `pre-push` que bloquea |
 | **Documentación** | **20 ADRs**, un documento por módulo y máquinas de estado canónicas |
 | **Despliegue** | Una instalación por restaurante · réplicas sin estado · migraciones en un paso `release` aparte |
+
+</details>
 
 La primera versión, la del TFG, sigue siendo pública: **[TFG](https://github.com/Matias048/TFG)**. Comparar ese repositorio con la versión actual es la mejor forma de ver cuánto he avanzado.
 
@@ -89,7 +141,7 @@ La primera versión, la del TFG, sigue siendo pública: **[TFG](https://github.c
   <img src="https://img.shields.io/badge/Stripe-635BFF?style=flat-square&logo=stripe&logoColor=white" alt="Stripe"/>
 </p>
 
-**Datos y mensajería**
+**Datos**
 <p>
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis"/>
