@@ -48,7 +48,7 @@ Es un producto interno con código privado. Puedo enseñar el código y hacer un
 **Aspectos técnicos**
 - Monolito modular con arquitectura hexagonal y CQRS. Los límites entre módulos se comprueban con ArchUnit en la integración continua.
 - Patrón Transactional Outbox para las operaciones críticas (pagos, emails, servicios externos), con reintentos y circuit breaker mediante Resilience4j.
-- Unas 290 clases de test en backend, con Testcontainers sobre PostgreSQL real, y unas 80 especificaciones en frontend.
+- Unas 2.378 clases de test en backend, con Testcontainers sobre PostgreSQL real, y unas 1000 especificaciones en frontend.
 - 20 registros de decisiones de arquitectura (ADR) y documentación por módulo.
 
 <details>
